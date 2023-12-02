@@ -5,16 +5,16 @@ import java.awt.*;
 
 public class Ball {
 
-    private final int WIDTH = 40;
-    private final int HEIGHT = 40;
+    private final int WIDTH = 20;
+    private final int HEIGHT = 20;
     private Graphics2D g2d = null;
 
     private Color ballColor = new Color(0, 0, 0);
 
     private int ballPositionX = 5;
-    private int ballSpeedX = 1;
+    private int ballSpeedX = 2;
     private int ballPositionY = 45;
-    private int ballSpeedY = 1;
+    private int ballSpeedY = 2;
 
     public void setBallColor(Color color) {
         ballColor = color;
@@ -24,32 +24,44 @@ public class Ball {
         g2d = graphics2D;
     }
 
-    public void calculatePosition(Tile [][] tiles) {
+    private int lastHitI = -1;
+    private int lastHitJ = -1;
+
+    public void calculatePosition(Tile[][] tiles) {
         boolean swappedX = false;
         boolean swappedY = false;
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (!swappedX){
-                    if (collisionCheckX(tiles [i][j])) {
+                if (!swappedX && !swappedY && (i != lastHitI || j != lastHitJ)) {
+                    if (collisionCheckX(tiles[i][j])) {
                         swappedX = true;
+                        lastHitI = i;
+                        lastHitJ = j;
                     }
-                }
 
-                if (!swappedY){
-                    if (collisionCheckY(tiles [i][j])) {
+                    if (collisionCheckY(tiles[i][j])) {
                         swappedY = true;
+                        lastHitI = i;
+                        lastHitJ = j;
                     }
                 }
             }
         }
 
-        if (ballPositionX > 315 || ballPositionX < 0 || swappedX) {
+        if (ballPositionX > 355 - WIDTH || ballPositionX < 0 || swappedX) {
             ballSpeedX = -ballSpeedX;
         }
-        if (ballPositionY > 315 || ballPositionY < 0 || swappedY) {
+
+        if (ballPositionY > 355 - WIDTH || ballPositionY < 0 || swappedY) {
             ballSpeedY = -ballSpeedY;
         }
+
+        if (ballPositionX > 355 - WIDTH || ballPositionX < 0 || ballPositionY > 355 - WIDTH || ballPositionY < 0) {
+            lastHitI = -1;
+            lastHitJ = -1;
+        }
+
         ballPositionX += ballSpeedX;
         ballPositionY += ballSpeedY;
     }
@@ -57,7 +69,7 @@ public class Ball {
     public void draw() {
         g2d.setPaint(ballColor);
 
-        g2d.fillOval(ballPositionX, ballPositionY, 40, 40);
+        g2d.fillOval(ballPositionX, ballPositionY, WIDTH, HEIGHT);
     }
 
     public boolean collisionCheck(Tile tile) {
@@ -73,23 +85,60 @@ public class Ball {
         return false;
     }
 
-    public boolean collisionCheckX(Tile tile) {
-        if ((ballPositionX <= tile.getTilePositionX() + tile.WIDTH && ballPositionX >= tile.getTilePositionX() ||
-                ballPositionX + WIDTH >= tile.getTilePositionX() && ballPositionX <= tile.getTilePositionX()) &&
+    public boolean collisionCheckXLeft(Tile tile) {
+        if ((tile.getTilePositionX() < ballPositionX + WIDTH && tile.getTilePositionX() > ballPositionX) &&
+                (tile.getTilePositionY() < ballPositionY + HEIGHT / 2 && tile.getTilePositionY() + tile.HEIGHT > ballPositionY + HEIGHT / 2) &&
                 tile.getColorSymbol() == 'G') {
+            System.out.println("Left");
             return true;
         }
-
         return false;
     }
-    public boolean collisionCheckY(Tile tile) {
-        if ((ballPositionY <= tile.getTilePositionY() + tile.WIDTH && ballPositionY >= tile.getTilePositionY() ||
-                        ballPositionY + WIDTH >= tile.getTilePositionY() && ballPositionY <= tile.getTilePositionY()) &&
+
+    public boolean collisionCheckXRight(Tile tile) {
+        if ((tile.getTilePositionX() + tile.WIDTH < ballPositionX + WIDTH && tile.getTilePositionX() + tile.WIDTH > ballPositionX) &&
+                (tile.getTilePositionY() < ballPositionY + HEIGHT / 2 && tile.getTilePositionY() + tile.HEIGHT > ballPositionY + HEIGHT / 2) &&
                 tile.getColorSymbol() == 'G') {
+            System.out.println("Right");
             return true;
         }
-
         return false;
+    }
+
+    public boolean collisionCheckX(Tile tile) {
+        return collisionCheckXLeft(tile) || collisionCheckXRight(tile);
+    }
+
+    public boolean collisionCheckYTop(Tile tile) {
+//        System.out.print("==== ");
+//        System.out.println(ballPositionY + HEIGHT);
+        if ((tile.getTilePositionY() < ballPositionY + HEIGHT && tile.getTilePositionY() > ballPositionY) &&
+                (tile.getTilePositionX() < ballPositionX + WIDTH / 2 && tile.getTilePositionX() + tile.WIDTH > ballPositionX + WIDTH / 2) &&
+                tile.getColorSymbol() == 'G') {
+            System.out.println("Top ");
+//            System.out.print(tile.getTilePositionY());
+//            System.out.print(" ");
+//            System.out.println(ballPositionY + HEIGHT);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean collisionCheckYBottom(Tile tile) {
+        if ((tile.getTilePositionY() + tile.HEIGHT < ballPositionY + HEIGHT && tile.getTilePositionY() + tile.HEIGHT > ballPositionY) &&
+                (tile.getTilePositionX() < ballPositionX + WIDTH / 2 && tile.getTilePositionX() + tile.WIDTH > ballPositionX + WIDTH / 2) &&
+                tile.getColorSymbol() == 'G') {
+            System.out.println("Bottom ");
+//            System.out.print(tile.getTilePositionY() + tile.HEIGHT);
+//            System.out.print(" ");
+//            System.out.println(ballPositionY);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean collisionCheckY(Tile tile) {
+        return collisionCheckYTop(tile) || collisionCheckYBottom(tile);
     }
 
 
