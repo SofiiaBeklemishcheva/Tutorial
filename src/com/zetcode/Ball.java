@@ -38,12 +38,16 @@ public class Ball {
                         swappedX = true;
                         lastHitI = i;
                         lastHitJ = j;
+                        tiles[i][j].setState(Tile.State.TRANSFORMING);
+                        tiles[i][j].setNewColor(Tile.COLOR_BLUE);
                     }
 
                     if (collisionCheckY(tiles[i][j])) {
                         swappedY = true;
                         lastHitI = i;
                         lastHitJ = j;
+                        tiles[i][j].setState(Tile.State.TRANSFORMING);
+                        tiles[i][j].setNewColor(Tile.COLOR_BLUE);
                     }
                 }
             }
