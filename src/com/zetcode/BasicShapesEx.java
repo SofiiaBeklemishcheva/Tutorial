@@ -80,6 +80,7 @@ class Surface extends JPanel implements ActionListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 tiles[i][j].setG2d(g2d);
+                tiles[i][j].changeColor();
                 tiles[i][j].draw();
             }
         }
