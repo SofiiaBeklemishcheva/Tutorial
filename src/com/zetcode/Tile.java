@@ -28,11 +28,11 @@ ACTIVE, TRANSFORMING, INACTIVE
         positionY = tilePositionY;
         colorSymbol=tileColor;
         setTileColor(tileColor);
-        if (tileColor == 'G'){
-            state = State.ACTIVE;
+        if (tileColor == 'B'){
+            state = State.INACTIVE;
         }
         else{
-            state = State.INACTIVE;
+            state = State.ACTIVE;
         }
     }
     public void setTileColor(char tileConfigChar) {
@@ -48,6 +48,11 @@ ACTIVE, TRANSFORMING, INACTIVE
     public void setState (State tileState){
         state=tileState ;
     }
+
+    public State getState ( ){
+        return state;
+    }
+
     public void setNewColor (Color tileColor){
         newColor= tileColor;
     }

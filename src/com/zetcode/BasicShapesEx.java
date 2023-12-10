@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import javax.swing.JFrame;
@@ -22,7 +23,7 @@ class Surface extends JPanel implements ActionListener {
     private final int DELAY = 10;
     private Timer timer;
     private char[][] boardConfig;
-    private final Ball ball;
+    private ArrayList <Ball> balls = new ArrayList<Ball>( );
     private Tile[][] tiles;
 
     public Surface() {
@@ -33,7 +34,7 @@ class Surface extends JPanel implements ActionListener {
         }
 
         initTimer();
-        ball = new Ball();
+        balls.add(new Ball(balls));
         initTiles();
 
 
@@ -65,7 +66,10 @@ class Surface extends JPanel implements ActionListener {
     private void doDrawing(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-        ball.setG2d(g2d);
+        for (Ball ball : balls) {
+            ball.setG2d(g2d);
+        }
+
 
 
         RenderingHints rh = new RenderingHints(
@@ -85,10 +89,13 @@ class Surface extends JPanel implements ActionListener {
             }
         }
 
+        for (Ball ball : balls) {
 
-        ball.setBallColor(new Color(150, 0, 150));
-        ball.calculatePosition(tiles);
-        ball.draw();
+            ball.calculatePosition(tiles);
+            ball.draw();
+        }
+
+
 
     }
 
