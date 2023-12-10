@@ -41,6 +41,17 @@ public class Ball {
                         tiles[i][j].setState(Tile.State.TRANSFORMING);
                         tiles[i][j].setNewColor(Tile.COLOR_BLUE);
                     }
+                    else-if(collisionRedTilesCheckX(tiles[i][j])){
+                        swappedX = true;
+                         g2d.setPaint(ballColor);
+
+                        g2d.fillOval(ballPositionX, ballPositionY, WIDTH, HEIGHT);
+                        lastHitI = i;
+                        lastHitJ = j;
+                        tiles[i][j].setState(Tile.State.TRANSFORMING);
+                        tiles[i][j].setNewColor(Tile.COLOR_BLUE);
+
+                    }
 
                     if (collisionCheckY(tiles[i][j])) {
                         swappedY = true;
@@ -48,6 +59,17 @@ public class Ball {
                         lastHitJ = j;
                         tiles[i][j].setState(Tile.State.TRANSFORMING);
                         tiles[i][j].setNewColor(Tile.COLOR_BLUE);
+                    }
+                      else-if(collisionRedTilesCheckY(tiles[i][j])){
+                        swappedX = true;
+                         g2d.setPaint(ballColor);
+
+                        g2d.fillOval(ballPositionX, ballPositionY, WIDTH, HEIGHT);
+                        lastHitI = i;
+                        lastHitJ = j;
+                        tiles[i][j].setState(Tile.State.TRANSFORMING);
+                        tiles[i][j].setNewColor(Tile.COLOR_BLUE);
+
                     }
                 }
             }
@@ -75,6 +97,7 @@ public class Ball {
 
         g2d.fillOval(ballPositionX, ballPositionY, WIDTH, HEIGHT);
     }
+
 
     public boolean collisionCheck(Tile tile) {
         if (((ballPositionX <= tile.getTilePositionX() + tile.WIDTH && ballPositionX >= tile.getTilePositionX() ||
@@ -146,6 +169,8 @@ public class Ball {
     }
 
 
+
+
     public void figuresPosition(int setTilePositionX, int setTilePositionY) {
         int tileEdgePositionX1 = 0;
         int tileEdgePositionY1 = 0;
@@ -170,3 +195,74 @@ public class Ball {
 
 
 }
+
+
+  public boolean collisionRedTilesCheck(Tile tile) {
+        if (((ballPositionX <= tile.getTilePositionX() + tile.WIDTH && ballPositionX >= tile.getTilePositionX() ||
+                ballPositionX + WIDTH >= tile.getTilePositionX() && ballPositionX <= tile.getTilePositionX()) &&
+                (ballPositionY <= tile.getTilePositionY() + tile.WIDTH && ballPositionY >= tile.getTilePositionY() ||
+                        ballPositionY + WIDTH >= tile.getTilePositionY() && ballPositionY <= tile.getTilePositionY())) &&
+                tile.getColorSymbol() == 'R') {
+            System.out.println("Collision");
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean collisionRedTilesCheckXLeft(Tile tile) {
+        if ((tile.getTilePositionX() < ballPositionX + WIDTH && tile.getTilePositionX() > ballPositionX) &&
+                (tile.getTilePositionY() < ballPositionY + HEIGHT / 2 && tile.getTilePositionY() + tile.HEIGHT > ballPositionY + HEIGHT / 2) &&
+                tile.getColorSymbol() == 'R') {
+            System.out.println("Left");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean collisionRedTilesCheckXRight(Tile tile) {
+        if ((tile.getTilePositionX() + tile.WIDTH < ballPositionX + WIDTH && tile.getTilePositionX() + tile.WIDTH > ballPositionX) &&
+                (tile.getTilePositionY() < ballPositionY + HEIGHT / 2 && tile.getTilePositionY() + tile.HEIGHT > ballPositionY + HEIGHT / 2) &&
+                tile.getColorSymbol() == 'R') {
+            System.out.println("Right");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean collisionRedTilesCheckX(Tile tile) {
+        return collisionRedTilesCheckXLeft(tile) || collisionRedTilesCheckXRight(tile);
+    }
+
+    public boolean collisionRedTilesCheckYTop(Tile tile) {
+//        System.out.print("==== ");
+//        System.out.println(ballPositionY + HEIGHT);
+        if ((tile.getTilePositionY() < ballPositionY + HEIGHT && tile.getTilePositionY() > ballPositionY) &&
+                (tile.getTilePositionX() < ballPositionX + WIDTH / 2 && tile.getTilePositionX() + tile.WIDTH > ballPositionX + WIDTH / 2) &&
+                tile.getColorSymbol() == 'R') {
+            System.out.println("Top ");
+//            System.out.print(tile.getTilePositionY());
+//            System.out.print(" ");
+//            System.out.println(ballPositionY + HEIGHT);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean collisionRedTilesCheckYBottom(Tile tile) {
+        if ((tile.getTilePositionY() + tile.HEIGHT < ballPositionY + HEIGHT && tile.getTilePositionY() + tile.HEIGHT > ballPositionY) &&
+                (tile.getTilePositionX() < ballPositionX + WIDTH / 2 && tile.getTilePositionX() + tile.WIDTH > ballPositionX + WIDTH / 2) &&
+                tile.getColorSymbol() == 'R') {
+            System.out.println("Bottom ");
+//            System.out.print(tile.getTilePositionY() + tile.HEIGHT);
+//            System.out.print(" ");
+//            System.out.println(ballPositionY);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean collisionRedTilesCheckY(Tile tile) {
+        return collisionRedTilesCheckYTop(tile) || collisionRedTilesCheckYBottom(tile);
+    }
+
