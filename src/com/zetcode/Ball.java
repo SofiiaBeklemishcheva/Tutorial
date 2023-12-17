@@ -1,6 +1,6 @@
 package com.zetcode;
 
-
+import java.util.Random;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -10,17 +10,28 @@ public class Ball {
     private final int HEIGHT = 20;
     private Graphics2D g2d = null;
     private ArrayList<Ball> balls = null;
+     private float linearSpeed;
 
     private Color ballColor = new Color(0, 0, 0);
 
     private int ballPositionX = 5;
-    private int ballSpeedX = 2;
+    private float ballSpeedX = 2;
     private int ballPositionY = 45;
-    private int ballSpeedY = 2;
+    private float ballSpeedY = 2;
 
-    public Ball (ArrayList<Ball> ballArrayList){
+    public Ball (ArrayList<Ball> ballArrayList; int initialX, int initialY){
+          Random random = new Random();
+          int newBallAngle = random.nextInt(61) + 60;
+          double tan =  Math.tan(newBallAngle);
+
        ballColor=new Color(150, 0, 150);
         balls = ballArrayList;
+        ballPositionX = initialX;
+        ballPositionY = initialY;
+        linearSpeed = (float) Math.sqrt(Math.pow(speedX, 2) + Math.pow(speedY, 2));
+        double velocityX = Math.sqrt(1 / (1 + tanRatio * tanRatio));
+        double velocityY = Math.sqrt(1 / (1 + 1 / (tanRatio * tanRatio)));
+
     }
 
 
@@ -40,7 +51,7 @@ public class Ball {
                 if (!swappedX && !swappedY && (i != lastHitI || j != lastHitJ)) {
                     if (collisionCheckX(tiles[i][j])) {
                         if(tiles[i][j].getColorSymbol()=='R'){
-                            balls.add(new Ball(balls));
+                             balls.add(new Ball(balls, ballPositionX, ballPositionY));
                         }
                         swappedX = true;
                         lastHitI = i;
